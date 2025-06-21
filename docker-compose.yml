@@ -1,43 +1,49 @@
 version: '3.8'
 
 services:
-  # FastAPI app service
-  app:
-    build: .
+  fastapi:
+    build:
+      context: .
     container_name: fastapi_app
     ports:
       - "8000:8000"
-    environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=yourpassword
-      - POSTGRES_DB=yourdatabase
-    volumes:
-      - .:/app
-    depends_on:
-      - db
     networks:
       - app_network
-
-  # PostgreSQL database service
-  db:
-    image: postgres:13
-    container_name: postgres_db
+    depends_on:
+      - redis
+      - postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: yourpassword
-      POSTGRES_DB: yourdatabase
+      - REDIS_URL=redis://redis:6379
+      - POSTGRES_URL=postgresql://postgres:password@postgres/dbname
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    networks:
+      - app_network
+    expose:
+      - "6379"  # Exposes Redis port internally to other containers
+    restart: always
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    networks:
+      - app_network
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=dbname
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app_network
-
-volumes:
-  postgres_data:
+    restart: always
 
 networks:
   app_network:
     driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local

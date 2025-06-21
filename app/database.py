@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Use your correct database URL
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:vaibhav@localhost/diet"  # Replace with your credentials
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:password@postgres/dbname"  # Replace with your credentials
 
 # Create the database engine
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
