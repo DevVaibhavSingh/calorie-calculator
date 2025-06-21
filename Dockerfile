@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . /app
 
 # Copy the .env file into the container (if it's in the same directory as your Dockerfile)
-COPY /app/.env /app/.env
+# COPY /app/.env /app/.env
 
 # Install the dependencies
 RUN pip install --upgrade pip
