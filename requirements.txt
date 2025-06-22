@@ -1,4 +1,4 @@
-fastapi==0.95.0
+fastapi==0.95.2
 uvicorn==0.22.0
 requests==2.28.1
 python-dotenv==1.0.0
@@ -14,6 +14,10 @@ bcrypt
 pytest
 pytest-asyncio
 mock
-httpx
-fastapi
+httpx==0.27.0
 starlette
+anyio
+pytest-asyncio
+pytest-tornasync
+pytest-trio
+twisted

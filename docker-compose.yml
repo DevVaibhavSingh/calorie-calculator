@@ -13,14 +13,8 @@ services:
       - redis
       - postgres
     environment:
-      - REDIS_URL=redis-11101.c325.us-east-1-4.ec2.redns.redis-cloud.com
-      - POSTGRES_URL=postgresql://postgres:password@postgres/dbname
-      - USDA_API_KEY=WOoxO6VLGdMm2Jhb4BjecffIcv2FdQ52BsNOc2BS
-      - REDIS_PORT=11101
-      - REDIS_PASSWORD=otFl5i1OjgXaBl7DvhDgtfPhtu6jVgXo
-      - JWT_SECRET_KEY="LWO9U6PgpmsHHVK0z8gY0-Dk2ZQf0_ya-gIJ6_y4wAs"
-      - DATABASE_URL=postgresql://postgres:password@postgres/dbname
-
+      - REDIS_URL=redis://redis:6379
+      - POSTGRES_URL=postgresql://postgres:password@postgres:5432/dbname
 
   redis:
     image: redis:latest

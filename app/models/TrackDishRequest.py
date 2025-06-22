@@ -1,15 +1,12 @@
-# app/models.py
-
 from pydantic import BaseModel
 from typing import Optional
 
-class CalorieResponse(BaseModel):
-    matched_dish_name: object
+class TrackedDishRequest(BaseModel):
     dish_name: str
-    servings: int
+    servings: float
     calories_per_serving: float
     total_calories: float
-    protein: Optional[float] = None
-    fat: Optional[float] = None
-    carbs: Optional[float] = None
     source: str
+    protein: Optional[float] = None
+    carbs: Optional[float] = None
+    fat: Optional[float] = None

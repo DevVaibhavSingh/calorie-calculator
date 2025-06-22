@@ -26,6 +26,7 @@ async def get_calories(request: CalorieRequest, current_user: User = Depends(get
     if cached_response:
         # If cached response exists, return it with the cache flag set to true
         cached_response["cache"] = True
+        cached_response["success"] = True
         return cached_response
 
     try:
@@ -37,6 +38,7 @@ async def get_calories(request: CalorieRequest, current_user: User = Depends(get
 
         # Add cache flag to indicate it was not from cache
         response_data["cache"] = False
+        response_data["success"] = True
 
         # Set the cache
         await asyncio.to_thread(set_cache, cache_key, response_data)

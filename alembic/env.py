@@ -2,9 +2,11 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
+from app.models import user, TrackedDish
+from app.models.base import Base
 
 # Import your Base from the database file
-from app.database import Base  # Import Base from the database file
+# from app.database import Base  # Import Base from the database file
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
