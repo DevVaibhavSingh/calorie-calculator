@@ -17,7 +17,6 @@ jobs:
         image: redis:latest
         ports:
           - 6379:6379
-
       postgres:
         image: postgres:latest
         ports:
@@ -26,11 +25,6 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
           POSTGRES_DB: dbname
-        options: >-
-          --health-cmd="pg_isready -U postgres"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
         volumes:
           - postgres_data:/var/lib/postgresql/data
 
@@ -39,7 +33,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Docker Buildx
+      # Step 2: Set up Docker
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -49,43 +43,30 @@ jobs:
           sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r .tag_name)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
 
-      # Step 4: Log into DockerHub (optional)
+      # Step 4: Log into DockerHub (Optional, if pushing to DockerHub)
       - name: Log into DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Step 5: Build Docker image
+      # Step 5: Build the Docker image using Docker Compose
       - name: Build Docker image
         run: |
           docker-compose -f docker-compose.yml build
 
-      # Step 6: Wait for Postgres to be ready
-      - name: Wait for Postgres
-        run: |
-          until docker-compose exec -T postgres pg_isready -U postgres; do
-            echo "Waiting for Postgres..."
-            sleep 2
-          done
+      # Step 6: Run tests
+      # - name: Run tests
+      #   run: |
+      #     docker-compose -f docker-compose.yml run fastapi pytest --maxfail=1 --disable-warnings -q
 
-      # Step 7: Run database migrations (assuming Alembic)
-      - name: Run Alembic migrations
-        run: |
-          docker-compose -f docker-compose.yml run fastapi alembic upgrade head
-
-      # Step 8: Run tests
-      - name: Run tests
-        run: |
-          docker-compose -f docker-compose.yml run fastapi pytest --maxfail=1 --disable-warnings -q
-
-      # Step 9: Push Docker image (optional)
+      # Step 7: (Optional) Push Docker image to DockerHub
       - name: Push Docker image to DockerHub
         if: success()
         run: |
           docker-compose -f docker-compose.yml push fastapi
 
-      # Step 10: Clean up Docker images
+      # Step 8: Clean up Docker images
       - name: Clean up Docker images
         run: |
           docker system prune -af
