@@ -13,3 +13,5 @@ class CalorieResponse(BaseModel):
     fat: Optional[float] = None
     carbs: Optional[float] = None
     source: str
+    cache: bool = None  # Indicates if the response was from cache
+    success: bool = True  # Indicates if the request was successful
