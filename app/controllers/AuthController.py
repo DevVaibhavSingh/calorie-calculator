@@ -8,6 +8,8 @@ from app.utils.jwt import create_access_token
 from pydantic import EmailStr
 from app.models.RegisterRequest import RegisterRequest
 from app.models.LoginRequest import LoginRequest
+from app.models.UserResponse import UserResponse
+from app.dependencies.auth import get_current_user
 
 router = APIRouter()
 
@@ -55,3 +57,11 @@ async def login_user(user: LoginRequest, db: Session = Depends(get_db)):
     access_token = create_access_token(data={"sub": user_record.email})
     
     return {"access_token": access_token, "token_type": "bearer", "user": user_record}
+
+
+@router.get("/me", response_model=UserResponse)
+async def get_current_user_details(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """
+    Return the details of the currently authenticated user.
+    """
+    return current_user
